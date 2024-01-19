@@ -8,16 +8,20 @@ function AuthProvider(props) {
   const [userInfo, setUserInfo] = useState({});
   const value = { userInfo, setUserInfo };
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      setUserInfo(user);
-    });
+    onAuthStateChanged(
+      auth,
+      (user) => {
+        setUserInfo(user);
+      },
+      []
+    );
   });
   return <AuthContext.Provider value={value} {...props}></AuthContext.Provider>;
 }
 
 function useAuth() {
-  const context = context(AuthContext);
-  if (typeof context === "undifined")
+  const context = useContext(AuthContext);
+  if (typeof context === "undefined")
     throw new console.error("useAuth must be used within AuthProvider");
   return context;
 }

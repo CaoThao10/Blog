@@ -1,20 +1,10 @@
 import React, { Children } from "react";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 const AuthenticationPageStyles = styled.div`
   min-height: 100vh;
   padding: 40px;
-
-  .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
 
   .form {
     display: flex;
@@ -38,13 +28,24 @@ const AuthenticationPageStyles = styled.div`
 
     margin-top: 10px;
   }
+
+  .have-account {
+    /* margin-bottom: 20px; */
+    width: 100%;
+    a {
+      display: inline-block;
+      color: ${(props) => props.theme.primary};
+    }
+  }
 `;
 
 const AuthenticationPage = ({ children }) => {
   return (
     <AuthenticationPageStyles>
       <div className="container">
-        <img src="/logo1.png" alt="" className="logo" />
+        <NavLink to="/">
+          <img src="/logo2.png" alt="" className="logo" />
+        </NavLink>
         <h2 className="heading">Monkey Blogging</h2>
         {children}
       </div>
