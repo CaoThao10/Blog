@@ -2,15 +2,19 @@ import React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 
+import Button from "../button/Button";
+import { useAuth } from "../../contexts/auth-context";
+
 const HeaderStyled = styled.header`
+  margin: 20px 0;
   .header {
     /* padding-top: 10px; */
     display: flex;
-    height: 50px;
+    height: 60px;
     max-width: 100%;
     justify-content: space-between;
-
-    padding: 10px 100px;
+    align-items: center;
+    padding: 0px 100px;
     /* background: rgb(255, 0, 95);
     background: linear-gradient(
       90deg,
@@ -18,16 +22,17 @@ const HeaderStyled = styled.header`
       rgba(242, 0, 0, 1) 47%,
       rgba(245, 86, 0, 0.8688725490196079) 96%
     ); */
-    background-color: hsla(0, 100%, 70%, 0.3);
+    /* background-color: hsla(0, 100%, 70%, 0.3); */
   }
 
   .img {
-    height: 100%;
+    height: 40px;
   }
 
   .title {
     display: flex;
     text-decoration: none;
+    align-items: center;
     span {
       color: ${(props) => props.theme.primary};
       font-size: 18px;
@@ -50,6 +55,10 @@ const HeaderStyled = styled.header`
   .search {
     padding: 0 10px;
   }
+
+  .menu-list {
+    display: flex;
+  }
   .menu {
     display: flex;
     margin: 0;
@@ -67,8 +76,26 @@ const HeaderStyled = styled.header`
   }
   .menu-list {
     display: flex;
+    align-items: center;
+    a {
+      text-decoration: none;
+    }
   }
-  .btn {
+
+  .header-auth {
+    /* color: ${(props) => props.theme.primary}; */
+    font-size: 18px;
+    /* font-weight: 500; */
+    /* background-color: white; */
+    padding: 5px;
+    /* border-radius: 8px; */
+    /* border: 1px solid rgb(255, 0, 95); */
+  }
+
+  .header-name {
+    color: ${(props) => props.theme.primary};
+  }
+  /* .btn {
     background: rgb(255, 0, 95);
     background: linear-gradient(
       90deg,
@@ -81,6 +108,10 @@ const HeaderStyled = styled.header`
     font-size: 16px;
     font-weight: 500;
     margin-left: 100px;
+  } */
+
+  .button {
+    text-decoration: none !important;
   }
 `;
 
@@ -99,7 +130,16 @@ const HomeMenuLinks = [
   },
 ];
 
+function getLastName(name) {
+  if (!name) {
+    return "...";
+  }
+  const length = name.split(" ").length;
+  return name.split(" ")[length - 1];
+}
+
 const Header = () => {
+  const { userInfo } = useAuth();
   return (
     <HeaderStyled>
       <div className="header">
@@ -107,7 +147,7 @@ const Header = () => {
           <NavLink to="/">
             <img className="img" src="/logo2.png" alt="" />
           </NavLink>
-          <span>Monkey Bloging</span>
+          <span>Citrus Blush Blogs</span>
           <div className="box-search">
             <input className="search" type="text" placeholder="Search"></input>
             <svg
@@ -124,7 +164,6 @@ const Header = () => {
             </svg>
           </div>
         </div>
-
         <div className="menu-list">
           <ul className="menu">
             {HomeMenuLinks.map((item) => (
@@ -133,7 +172,18 @@ const Header = () => {
               </li>
             ))}
           </ul>
-          <button className="btn">Sign in</button>
+          {!userInfo ? (
+            <Button className="button" type="button" to="/sign-up">
+              Sign in
+            </Button>
+          ) : (
+            <div className="header-auth">
+              <span>Welcome back, </span>
+              <strong className="header-name">
+                {getLastName(userInfo?.displayName)}
+              </strong>
+            </div>
+          )}
         </div>
       </div>
     </HeaderStyled>

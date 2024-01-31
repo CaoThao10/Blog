@@ -30,7 +30,7 @@ const AuthenticationPageStyles = styled.div`
   }
 
   .have-account {
-    /* margin-bottom: 20px; */
+    margin: 10px 0;
     width: 100%;
     a {
       display: inline-block;
@@ -46,7 +46,7 @@ const AuthenticationPage = ({ children }) => {
         <NavLink to="/">
           <img src="/logo2.png" alt="" className="logo" />
         </NavLink>
-        <h2 className="heading">Monkey Blogging</h2>
+        <h2 className="heading">Citrus Blush Blogs</h2>
         {children}
       </div>
     </AuthenticationPageStyles>
