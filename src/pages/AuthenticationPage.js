@@ -5,6 +5,16 @@ import styled from "styled-components";
 const AuthenticationPageStyles = styled.div`
   min-height: 100vh;
   padding: 40px;
+  .header {
+    width: 100%;
+    max-width: 1260px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 
   .form {
     display: flex;
@@ -42,7 +52,7 @@ const AuthenticationPageStyles = styled.div`
 const AuthenticationPage = ({ children }) => {
   return (
     <AuthenticationPageStyles>
-      <div className="container">
+      <div className="header">
         <NavLink to="/">
           <img src="/logo2.png" alt="" className="logo" />
         </NavLink>

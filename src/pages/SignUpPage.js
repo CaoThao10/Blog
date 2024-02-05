@@ -4,8 +4,8 @@ import Label from "../components/lable/Label";
 import Input from "../components/input/Input";
 import { useForm } from "react-hook-form";
 import Field from "../components/field/Field";
-import IconEyeClose from "../components/icon/IconEyeClose";
-import IconEyeOpen from "../components/icon/IconEyeOpen";
+// import IconEyeClose from "../components/icon/IconEyeClose";
+// import IconEyeOpen from "../components/icon/IconEyeOpen";
 import Button from "../components/button/Button";
 // import LoadingSpinner from "../components/loading/LoadingSpinner";
 import * as yup from "yup";
@@ -17,16 +17,17 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 import AuthenticationPage from "./AuthenticationPage";
+import InputTogglePass from "../components/input/InputTogglePass";
 
-const scheme = yup.object({
+const schema = yup.object({
   fullname: yup.string().required("Please enter your fullname"),
   email: yup
     .string()
     .email("Please enter valid email address")
-    .required("Please enter your email addres"),
+    .required("Please enter your email address"),
   password: yup
     .string()
-    .min(8, "Your password be at least 8 charactres or greater")
+    .min(8, "Your password must be at least 8 characters or greater")
     .required("Please enter your password"),
 });
 
@@ -36,14 +37,12 @@ const SignUpPage = () => {
     control,
     handleSubmit,
     formState: { errors, isValid, isSubmitting },
-    watch,
-    reset,
   } = useForm({
     mode: "onChange",
-    resolver: yupResolver(scheme),
+    resolver: yupResolver(schema),
   });
 
-  const [togglePassword, setTogglePassword] = useState(false);
+  // const [togglePassword, setTogglePassword] = useState(false);
   const handleSignUp = async (values) => {
     console.log(values);
     if (!isValid) return;
@@ -73,27 +72,29 @@ const SignUpPage = () => {
   };
 
   useEffect(() => {
-    console.log(Object.values(errors));
     const arrErroes = Object.values(errors);
     if (arrErroes.length > 0) {
       toast.error(arrErroes[0]?.message, {
         pauseOnHover: false,
+        delay: 0,
       });
     }
   }, [errors]);
   useEffect(() => {
     document.title = "Register Page";
-  });
+  }, []);
   return (
     <AuthenticationPage>
-      <form className="form" onSubmit={handleSubmit(handleSignUp)}>
+      <form
+        className="form"
+        onSubmit={handleSubmit(handleSignUp)}
+        autoComplete="off"
+      >
         <Field>
           <Label htmlFor="fullname">Fullname</Label>
           <Input
             type="text"
-            // id="fullname"
             name="fullname"
-            // className="input"
             placeholder="Enter your fullname"
             control={control}
           />
@@ -102,35 +103,14 @@ const SignUpPage = () => {
           <Label htmlFor="email">Email address</Label>
           <Input
             type="email"
-            // id="fullname"
             name="email"
-            // className="input"
-            placeholder="Enter your emaill"
+            placeholder="Enter your email"
             control={control}
           />
         </Field>
         <Field>
-          <Label htmlFor="password">Email password</Label>
-          <Input
-            type={togglePassword ? "text" : "password"}
-            // id="fullname"
-            name="password"
-            // className="input"
-            placeholder="Enter your password"
-            control={control}
-          >
-            {!togglePassword ? (
-              <IconEyeClose
-                className="icon-input"
-                onClick={() => setTogglePassword(true)}
-              ></IconEyeClose>
-            ) : (
-              <IconEyeOpen
-                className="icon-input"
-                onClick={() => setTogglePassword(false)}
-              ></IconEyeOpen>
-            )}
-          </Input>
+          <Label htmlFor="password"> password</Label>
+          <InputTogglePass control={control}></InputTogglePass>
         </Field>
         <div className="have-account">
           You already have an account? <NavLink to={"/sign-in"}>Login</NavLink>

@@ -50,7 +50,7 @@ const HomeBanner = () => {
           voluptatum, quae maiores et possimus fugit ut, in est nisi ad ipsam
           quo.
         </h4>
-        <Button to="/sign-in">Get started</Button>
+        <Button to="/sign-up">Get started</Button>
       </div>
       <div className="banner">
         <img className="icon-banner" src="/iconBanner.png" alt="" />
