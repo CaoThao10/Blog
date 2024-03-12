@@ -19,6 +19,7 @@ const PostMetaStyles = styled.div`
       width: 4px;
       height: 4px;
       background-color: currentColor;
+      /* background-color: white */
       border-radius: 100rem;
     }
     &-author {
@@ -34,8 +35,8 @@ const PostMetaStyles = styled.div`
 `;
 
 const PostMeta = ({
-  date = "Mar 23",
-  authorName = "Cao Thao",
+  date = "23",
+  authorName = "",
   className = "",
   to = "",
 }) => {
@@ -43,9 +44,9 @@ const PostMeta = ({
     <PostMetaStyles className={`post-meta ${className}`}>
       <span className="post-time">{date}</span>
       <span className="post-dot"></span>
-      <Link to={`/author/${to}`}>
+      <NavLink to={to}>
         <span className="post-author">{authorName}</span>
-      </Link>
+      </NavLink>
     </PostMetaStyles>
   );
 };

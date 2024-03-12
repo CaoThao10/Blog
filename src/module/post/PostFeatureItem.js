@@ -4,6 +4,11 @@ import PostCategory from "./PostCategory";
 import PostTitle from "./PostTitle";
 import PostMeta from "./PostMeta";
 import PostImage from "./PostImage";
+import slugify from "slugify";
+import { useEffect, useState } from "react";
+import { collection, doc, getDoc, query, where } from "firebase/firestore";
+import { db } from "../../firebase/firebase-config";
+import { useAuth } from "../../contexts/auth-context";
 
 const PostFeatureItemStyles = styled.div`
   width: 100%;
@@ -83,6 +88,7 @@ const PostFeatureItemStyles = styled.div`
     }
     &-top {
       display: flex;
+      width: 100%;
       justify-content: space-between;
       align-items: center;
       /* margin-bottom: 16px; */
@@ -101,29 +107,41 @@ const PostFeatureItemStyles = styled.div`
   }
 `;
 
-const PostFeatureItem = () => {
+const PostFeatureItem = ({ data }) => {
+  const [category, setCategory] = useState("");
+  const [user, setUser] = useState("");
+  useEffect(() => {
+    async function fetch() {
+      // console.log(data);
+      const docRef = doc(db, "categories", data.categoryId);
+      const docSnap = await getDoc(docRef);
+      setCategory(docSnap.data());
+    }
+    fetch();
+  }, [data.categoryId]);
+  useEffect(() => {
+    async function fetchUser() {
+      console.log(data);
+      const docRef = doc(db, "users", data.userId);
+      const docSnap = await getDoc(docRef);
+      setUser(docSnap.data());
+    }
+    fetchUser();
+  }, [data.userId]);
+  console.log(user);
+  if (!data || !data.id) return null;
+  // console.log(user);
   return (
     <PostFeatureItemStyles>
-      <PostImage url="/img1.jpeg"></PostImage>
+      <PostImage url={data.image} alt="unsplash"></PostImage>
       <div className="post-overlay"></div>
       <div className="post-content">
         <div className="post-top">
-          {/* <span className="post-category">Kiến thức</span> */}
-          <PostCategory type="secondary">Kiến thức</PostCategory>
+          {category?.name && <PostCategory>{category.name}</PostCategory>}
+          <PostMeta authorName={user?.username}></PostMeta>
         </div>
-        {/* <div className="post-info">
-          <span className="post-time">Mar 23</span>
-          <span className="post-dot"></span>
-          <span className="post-author">Adiez Le</span>
-        </div> */}
-        <PostMeta></PostMeta>
+        <PostTitle size="big">{data.title}</PostTitle>
       </div>
-      {/* <div className="post-title">
-        <h3>Hướng dẫn setup phòng cực chill</h3>
-      </div> */}
-      <PostTitle className="post-title">
-        Hướng dẫn setup phòng cực chill
-      </PostTitle>
     </PostFeatureItemStyles>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import Button from "../../components/button/Button";
@@ -6,97 +6,254 @@ import Field from "../../components/field/Field";
 import Label from "../../components/lable/Label";
 import Input from "../../components/input/Input";
 import Radio from "../../components/checkbox/Radio";
-import Dropdown from "../../components/dropdowm/Dropdown";
-const PostAddNewStyles = styled.div``;
+// import Dropdown from "../../components/dropdown/Dropdown";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
+import { db } from "../../firebase/firebase-config";
+import slugify from "slugify";
+import ImageUpload from "../../components/image/ImageUpload";
+import useFirebaseImage from "../../hooks/useFirebaseImage";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+  serverTimestamp,
+} from "firebase/firestore";
+import Toggle from "../../components/toggle/Toggle";
+// import { Dropdown } from "components/dropdown";
+// import { useAuth } from "contexts/auth-context";
+import { useAuth } from "../../contexts/auth-context";
+import { toast } from "react-toastify";
+import { Dropdown } from "../../components/dropdown";
+import { postStatus } from "../../utils/constants";
+
+// const PostAddNewStyles = styled.div``;
+const storage = getStorage();
 
 const PostAddNew = () => {
-  const { control, watch, setValue } = useForm({
+  const { userInfo } = useAuth();
+  const { control, watch, setValue, handleSubmit, getValues, reset } = useForm({
     mode: "onChange",
     defaultValues: {
-      status: "",
-      category: "",
+      title: "",
+      slug: "",
+      status: 2,
+      categoryId: "",
+      hot: false,
+      image: "",
     },
   });
+
   const watchStatus = watch("status");
-  const watchCategory = watch("category");
-  console.log("PostAddNew ~ watchCategory", watchCategory);
+  const watchHot = watch("hot");
+  // const cate = watch("categoryId");
+  // console.log(cate);
+  // console.log("PostAddNew ~ watchStatus", watchStatus);
+  // const watchCategory = watch("category");
+  // console.log("PostAddNew ~ watchCategory", watchCategory);
+  const {
+    image,
+    progress,
+    handleSelectImage,
+    handleDeleteImage,
+    handleResetUpload,
+    setImage,
+  } = useFirebaseImage(setValue, getValues);
+  const [categories, setCategories] = useState([]);
+  const [selectCategory, setSelectCategory] = useState("");
+  const [loading, setLoading] = useState(false);
+  const addPostHandler = async (values) => {
+    setLoading(true);
+    try {
+      const cloneValues = { ...values };
+      console.log(cloneValues);
+      cloneValues.slug = slugify(values.slug || values.title, { lower: true });
+      cloneValues.status = Number(values.status);
+      const colRef = collection(db, "posts");
+      await addDoc(colRef, {
+        ...cloneValues,
+        image,
+        userId: userInfo.uid,
+        createdAt: serverTimestamp(),
+      });
+      toast.success("Create new post successfully!");
+      reset({
+        title: "",
+        slug: "",
+        status: 2,
+        categoryId: "",
+        hot: false,
+        image: "",
+      });
+      handleResetUpload();
+      setImage("");
+      setSelectCategory({});
+    } catch (error) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+  // const [progress, setProgress] = useState(0);
+  // const [image, setImage] = useState("");
+
+  useEffect(() => {
+    async function getData() {
+      const colRef = collection(db, "categories");
+      const q = query(colRef, where("status", "==", 1));
+      const querySnapshot = await getDocs(q);
+      let result = [];
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, "=>", doc.data());
+        // doc.data() is never undefined for query doc snapshots
+        result.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      console.log("getData ~ result", result);
+      setCategories(result);
+    }
+    getData();
+  }, []);
+  useEffect(() => {
+    document.title = "Monkey Blogging - Add new post";
+  }, []);
+
+  const handleClickOption = (item) => {
+    setValue("categoryId", item.id);
+
+    setSelectCategory(item);
+  };
+  // console.log(getValues);
+
   return (
-    <PostAddNewStyles>
+    // <PostAddNewStyles>
+    <>
       <h1 className="dashboard-heading">Add new post</h1>
-      <form>
+      <form onSubmit={handleSubmit(addPostHandler)}>
         <div className="grid grid-cols-2 gap-x-10 mb-10">
           <Field>
             <Label>Title</Label>
-            <div className="flex items-center gap-x-5">
-              <Radio
-                name="status"
-                control={control}
-                checked={watchStatus === "approved"}
-                onClick={() => setValue("status", "approved")}
-                value="approved"
-              >
-                Approved
-              </Radio>
-              <Radio
-                name="status"
-                control={control}
-                checked={watchStatus === "pending"}
-                onClick={() => setValue("status", "pending")}
-                value="pending"
-              >
-                Pending
-              </Radio>
-              <Radio
-                name="status"
-                control={control}
-                checked={watchStatus === "reject"}
-                onClick={() => setValue("status", "reject")}
-                value="reject"
-              >
-                Reject
-              </Radio>
-            </div>
-            {/* <Input
+            <Input
               control={control}
               placeholder="Enter your title"
               name="title"
-            ></Input> */}
+              // onChange={() => {}}
+            ></Input>
+          </Field>
+          <Field>
+            <Label>Slug</Label>
+            <Input
+              control={control}
+              placeholder="Enter your slug"
+              name="slug"
+              // onChange={() => {}}
+            ></Input>
+          </Field>
+        </div>
+        <div className="grid grid-cols-2 gap-x-10 mb-10">
+          <Field>
+            <Label>Image</Label>
+            <ImageUpload
+              className="h-[250px]"
+              onChange={handleSelectImage}
+              progress={progress}
+              handleDeleteImage={handleDeleteImage}
+              image={image}
+            ></ImageUpload>
           </Field>
           <Field>
             <Label>Author</Label>
             <Input
               control={control}
               placeholder="Find the author"
-              name="slug"
+              name="author"
+              // onChange={() => {}}
             ></Input>
           </Field>
         </div>
         <div className="grid grid-cols-2 gap-x-10 mb-10">
           <Field>
             <Label>Status</Label>
+            <div className="flex gap-x-5">
+              <Radio
+                name="status"
+                control={control}
+                checked={Number(watchStatus) === postStatus.APPROVED}
+                value={postStatus.APPROVED}
+              >
+                Approved
+              </Radio>
+              <Radio
+                name="status"
+                control={control}
+                checked={Number(watchStatus) === postStatus.PENDING}
+                value={postStatus.PENDING}
+              >
+                Pending
+              </Radio>
+              <Radio
+                name="status"
+                control={control}
+                checked={Number(watchStatus) === postStatus.REJECTED}
+                value={postStatus.REJECTED}
+              >
+                Reject
+              </Radio>
+            </div>
           </Field>
-          <Field>
-            <Label>Author</Label>
-          </Field>
-        </div>
-        <div className="grid grid-cols-2 gap-x-10 mb-10">
           <Field>
             <Label>Category</Label>
             <Dropdown>
-              <Dropdown.Option>Knowledge</Dropdown.Option>
-              <Dropdown.Option>Blockchain</Dropdown.Option>
-              <Dropdown.Option>Setup</Dropdown.Option>
-              <Dropdown.Option>Nature</Dropdown.Option>
-              <Dropdown.Option>Developer</Dropdown.Option>
+              <Dropdown.Select placeholder="Please select an option"></Dropdown.Select>
+              <Dropdown.List>
+                {categories.length > 0 &&
+                  categories.map((item) => (
+                    <Dropdown.Option
+                      key={item.id}
+                      onClick={() => handleClickOption(item)}
+                    >
+                      {item.name}
+                    </Dropdown.Option>
+                  ))}
+              </Dropdown.List>
             </Dropdown>
+            {selectCategory?.name && (
+              <span className="inline-block p-3 rounded-lg bg-green-50 text-sm text-green-600 font-medium">
+                {selectCategory?.name}
+              </span>
+            )}
+          </Field>
+        </div>
+
+        <div className="grid grid-cols-2 gap-x-10 mb-10">
+          <Field>
+            <Label>Feature post</Label>
+            <Toggle
+              on={watchHot === true}
+              onClick={() => setValue("hot", !watchHot)}
+            ></Toggle>
           </Field>
           <Field></Field>
         </div>
-        <Button type="submit" className="mx-auto">
+        <Button
+          type="submit"
+          className="mx-auto w-[250px]"
+          isLoading={loading}
+          disabled={loading}
+        >
           Add new post
         </Button>
       </form>
-    </PostAddNewStyles>
+    </>
   );
 };
 

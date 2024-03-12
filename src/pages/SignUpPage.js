@@ -14,11 +14,11 @@ import { toast } from "react-toastify";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../firebase/firebase-config";
 import { NavLink, useNavigate } from "react-router-dom";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, setDoc, doc } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 import AuthenticationPage from "./AuthenticationPage";
 import InputTogglePass from "../components/input/InputTogglePass";
-
+import slugify from "slugify";
 const schema = yup.object({
   fullname: yup.string().required("Please enter your fullname"),
   email: yup
@@ -46,11 +46,7 @@ const SignUpPage = () => {
   const handleSignUp = async (values) => {
     console.log(values);
     if (!isValid) return;
-    // return new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     resolve();
-    //   }, 5000);
-    // });
+
     const user = await createUserWithEmailAndPassword(
       auth,
       values.email,
@@ -61,11 +57,11 @@ const SignUpPage = () => {
     });
     const db = getFirestore();
 
-    const colRef = collection(db, "users");
-    addDoc(colRef, {
-      name: values.fullname,
+    await setDoc(doc(db, "users", auth.currentUser.uid), {
+      fullname: values.fullname,
       email: values.email,
       password: values.password,
+      username: slugify(values.fullname, { lower: true }),
     });
     toast.success("Create user successfuly!");
     navigate("/");

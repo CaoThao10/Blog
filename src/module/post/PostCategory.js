@@ -12,16 +12,17 @@ const PostCategoryStyles = styled.div`
   a {
     display: block;
     text-decoration: none;
-    color: ${(props) => props.theme.gray6B};
+    color: white;
+    /* color: ${(props) => props.theme.gray6B}; */
   }
   ${(props) =>
     props.type === "primary" &&
     css`
       /* background-color: ${(props) => props.theme.grayF3}; */
-      background: rgb(255, 0, 95);
+      /* background: rgb(255, 0, 95); */
       background: linear-gradient(
         9deg,
-        rgba(255, 0, 95, 0.1) 0%,
+        rgba(255, 0, 95, 0.1) 10%,
         rgba(242, 0, 0, 0.3) 47%,
         rgba(245, 86, 0, 0.4) 96%
       );

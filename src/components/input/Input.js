@@ -55,10 +55,12 @@ const Input = ({
   children,
   hasIcon = false,
   control,
+  value,
   ...props
 }) => {
   const { field } = useController({
     control,
+
     name,
     defaultValue: "",
   });

@@ -10,7 +10,7 @@ const Radio = ({ checked, children, control, name, ...rest }) => {
   return (
     <label>
       <input
-        onChange={() => {}}
+        // onChange={() => {}}
         checked={checked}
         type="radio"
         className="hidden-input"
