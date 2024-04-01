@@ -6,9 +6,8 @@ import PostMeta from "./PostMeta";
 import PostImage from "./PostImage";
 import slugify from "slugify";
 import { useEffect, useState } from "react";
-import { collection, doc, getDoc, query, where } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase-config";
-import { useAuth } from "../../contexts/auth-context";
 
 const PostFeatureItemStyles = styled.div`
   width: 100%;
@@ -108,39 +107,51 @@ const PostFeatureItemStyles = styled.div`
 `;
 
 const PostFeatureItem = ({ data }) => {
-  const [category, setCategory] = useState("");
-  const [user, setUser] = useState("");
-  useEffect(() => {
-    async function fetch() {
-      // console.log(data);
-      const docRef = doc(db, "categories", data.categoryId);
-      const docSnap = await getDoc(docRef);
-      setCategory(docSnap.data());
-    }
-    fetch();
-  }, [data.categoryId]);
-  useEffect(() => {
-    async function fetchUser() {
-      console.log(data);
-      const docRef = doc(db, "users", data.userId);
-      const docSnap = await getDoc(docRef);
-      setUser(docSnap.data());
-    }
-    fetchUser();
-  }, [data.userId]);
-  console.log(user);
-  if (!data || !data.id) return null;
+  // const [category, setCategory] = useState("");
+  // const [user, setUser] = useState("");
+  // useEffect(() => {
+  //   async function fetch() {
+  //     // console.log(data);
+  //     const docRef = doc(db, "categories", data.categoryId);
+  //     const docSnap = await getDoc(docRef);
+  //     setCategory(docSnap.data());
+  //   }
+  //   fetch();
+  // }, [data.categoryId]);
+  // useEffect(() => {
+  //   async function fetchUser() {
+  //     console.log(data);
+  //     const docRef = doc(db, "users", data.userId);
+  //     const docSnap = await getDoc(docRef);
+  //     setUser(docSnap.data());
+  //   }
+  //   fetchUser();
+  // }, [data.userId]);
   // console.log(user);
+  if (!data || !data.id) return null;
+  console.log(data);
+  const date = new Date(data?.createdAt?.seconds * 1000);
+  const formatDate = new Date(date).toLocaleDateString("vi-VI");
+  const { category, user } = data;
   return (
     <PostFeatureItemStyles>
       <PostImage url={data.image} alt="unsplash"></PostImage>
       <div className="post-overlay"></div>
       <div className="post-content">
         <div className="post-top">
-          {category?.name && <PostCategory>{category.name}</PostCategory>}
-          <PostMeta authorName={user?.username}></PostMeta>
+          {category?.name && (
+            <PostCategory to={category.slug}>{category.name}</PostCategory>
+          )}
+          <PostMeta
+            // to={slugify(user?.fullname || "", { lower: true })}
+            to={slugify(user?.username || "", { lower: true })}
+            authorName={user?.username}
+            date={formatDate || ""}
+          ></PostMeta>
         </div>
-        <PostTitle size="big">{data.title}</PostTitle>
+        <PostTitle to={data.slug} size="big">
+          {data.title}
+        </PostTitle>
       </div>
     </PostFeatureItemStyles>
   );

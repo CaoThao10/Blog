@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Heading from "../../components/layout/Heading";
 import PostNewestLarge from "../post/PostNewestLarge";
 import PostNewestItem from "../post/PostNewestItem";
+import { v4 } from "uuid";
+import {
+  collection,
+  limit,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "../../firebase/firebase-config";
 
 const HomeNewestStyles = styled.div`
   margin: 0 20px;
@@ -38,18 +47,40 @@ const HomeNewestStyles = styled.div`
 `;
 
 const HomeNewest = () => {
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    const colRef = collection(db, "posts");
+    const queries = query(
+      colRef,
+      where("status", "==", 1),
+      where("hot", "==", false),
+      limit(4)
+    );
+    onSnapshot(queries, (snapshot) => {
+      const results = [];
+      snapshot.forEach((doc) => {
+        results.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      setPosts(results);
+    });
+  }, []);
+  if (posts.length <= 0) return null;
+  const [first, ...other] = posts;
   return (
     <HomeNewestStyles>
       <div className="container">
         <Heading>Mới nhất</Heading>
         <div className="layout">
-          <PostNewestLarge></PostNewestLarge>
+          <PostNewestLarge data={first}></PostNewestLarge>
           <div className="right">
             <div className="sidebar">
-              <PostNewestItem></PostNewestItem>
-            </div>
-            <div className="sidebar">
-              <PostNewestItem></PostNewestItem>
+              {other.length > 0 &&
+                other.map((item) => (
+                  <PostNewestItem key={v4()} data={item}></PostNewestItem>
+                ))}
             </div>
           </div>
         </div>

@@ -1,11 +1,19 @@
-import { Button } from "components/button";
-import { Field } from "components/field";
-import ImageUpload from "components/image/ImageUpload";
-import { Input } from "components/input";
-import { Label } from "components/label";
-import DashboardHeading from "module/dashboard/DashboardHeading";
-import React from "react";
+// import { Button } from "components/button";
+// import { Field } from "components/field";
+// import ImageUpload from "components/image/ImageUpload";
+// import { Input } from "components/input";
+// import { Label } from "components/label";
+// import DashboardHeading from "module/dashboard/DashboardHeading";
+// import React from "react";
+// import { useForm } from "react-hook-form";
+
 import { useForm } from "react-hook-form";
+import DashboardHeading from "../dashboard/DashboardHeading";
+import ImageUpload from "../../components/image/ImageUpload";
+import Field from "../../components/field/Field";
+import Label from "../../components/lable/Label";
+import Input from "../../components/input/Input";
+import Button from "../../components/button/Button";
 
 const UserProfile = () => {
   const { control } = useForm({

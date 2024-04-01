@@ -39,7 +39,7 @@ const ImageUpload = (props) => {
           <img src={image} className="w-full h-full object-cover" alt="" />
           <button
             type="button"
-            className="w-16 h-16 bg-white rounded-full flex items-center justify-center cursor-pointer absolute z-10 text-red-500 opacity-0 invisible transition-all group-hover:opacity-100 group-hover:visible"
+            className="absolute z-10 flex items-center justify-center invisible w-16 h-16 text-red-500 transition-all bg-white rounded-full opacity-0 cursor-pointer group-hover:opacity-100 group-hover:visible"
             onClick={handleDeleteImage}
           >
             <svg

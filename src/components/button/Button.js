@@ -41,16 +41,25 @@ const Button = ({
   const { isLoading, to } = props;
   const child = !!isLoading ? <LoadingSpinner></LoadingSpinner> : children;
   if (to !== "" && typeof to === "string") {
+    if (onClick) {
+      return (
+        <NavLink to={to}>
+          <ButtonStyles type={type} onClick={onClick} {...props}>
+            {child}
+          </ButtonStyles>
+        </NavLink>
+      );
+    }
     return (
       <NavLink to={to}>
-        <ButtonStyles type={type} onClick={onClick} {...props}>
+        <ButtonStyles type={type} {...props}>
           {child}
         </ButtonStyles>
       </NavLink>
     );
   }
   return (
-    <ButtonStyles type={type} {...props}>
+    <ButtonStyles type={type} onClick={onClick} {...props}>
       {child}
     </ButtonStyles>
   );

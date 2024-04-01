@@ -1,13 +1,14 @@
-import { ActionDelete, ActionEdit } from "components/action";
-import { Button } from "components/button";
-import { LabelStatus } from "components/label";
-import { Table } from "components/table";
-import { ActionView } from "drafts/action";
-import { db } from "firebase-app/firebase-config";
+// import { ActionDelete, ActionEdit } from "components/action";
+import Button from "../../components/button/Button";
+// import { LabelStatus } from "components/label";
+// import { Table } from "components/table";
+// import { ActionView } from "drafts/action";
+import { db } from "../../firebase/firebase-config";
 import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   limit,
   onSnapshot,
@@ -15,15 +16,23 @@ import {
   startAfter,
   where,
 } from "firebase/firestore";
-import DashboardHeading from "module/dashboard/DashboardHeading";
+// import DashboardHeading from "module/dashboard/DashboardHeading";
 import React, { useEffect, useState } from "react";
-import { categoryStatus, userRole } from "utils/constants";
-import Swal from "sweetalert2";
+// import { categoryStatus, userRole } from "utils/constants";
+import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
-import { useAuth } from "contexts/auth-context";
+// import { useAuth } from "contexts/auth-context";
+import ActionEdit from "../../components/action/ActionEdit";
+import ActionDelete from "../../components/action/ActionDelete";
+import LabelStatus from "../../components/lable/LabelStatus";
+import Table from "../../components/table/Table";
+import ActionView from "../../components/action/ActionView";
+import { categoryStatus, userRole } from "../../utils/constants";
+import DashboardHeading from "../dashboard/DashboardHeading";
+import { useAuth } from "../../contexts/auth-context";
 
-const CATEGORY_PER_PAGE = 10;
+const CATEGORY_PER_PAGE = 1;
 
 const CategoryManage = () => {
   const [categoryList, setCategoryList] = useState([]);
@@ -31,6 +40,7 @@ const CategoryManage = () => {
   const [filter, setFilter] = useState(undefined);
   const [lastDoc, setLastDoc] = useState();
   const [total, setTotal] = useState(0);
+
   const handleLoadMoreCategory = async () => {
     const nextRef = query(
       collection(db, "categories"),
@@ -87,25 +97,22 @@ const CategoryManage = () => {
   }, [filter]);
   const { userInfo } = useAuth();
   const handleDeleteCategory = async (docId) => {
-    if (userInfo?.role !== userRole.ADMIN) {
-      Swal.fire("Failed", "You have no right to do this action", "warning");
-      return;
-    }
+    // if (userInfo?.role !== userRole.ADMIN) {
+    // Swal.fire("Failed", "You have no right to do this action", "warning");
+    // return;
+    // }
     const colRef = doc(db, "categories", docId);
-    Swal.fire({
+    const willDelete = await swal({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "Are you sure that you want to delete this file?",
       icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await deleteDoc(colRef);
-        Swal.fire("Deleted!", "Your file has been deleted.", "success");
-      }
+      dangerMode: true,
     });
+
+    if (willDelete) {
+      await deleteDoc(colRef);
+      swal("Deleted!", "Your imaginary file has been deleted!", "success");
+    }
   };
   const handleInputFilter = debounce((e) => {
     setFilter(e.target.value);
@@ -173,10 +180,13 @@ const CategoryManage = () => {
       </Table>
       {total > categoryList.length && (
         <div className="mt-10">
-          <Button onClick={handleLoadMoreCategory} className="mx-auto">
+          <Button
+            type="button"
+            onClick={handleLoadMoreCategory}
+            className="mx-auto"
+          >
             Load more
           </Button>
-          {total}
         </div>
       )}
     </div>

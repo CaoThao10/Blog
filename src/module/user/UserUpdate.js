@@ -1,21 +1,38 @@
-import { Button } from "components/button";
-import { Radio } from "components/checkbox";
-import { Field, FieldCheckboxes } from "components/field";
-import ImageUpload from "components/image/ImageUpload";
-import { Input } from "components/input";
-import { Label } from "components/label";
-import { Textarea } from "components/textarea";
-import { useAuth } from "contexts/auth-context";
-import { db } from "firebase-app/firebase-config";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import useFirebaseImage from "hooks/useFirebaseImage";
-import DashboardHeading from "module/dashboard/DashboardHeading";
-import React, { useEffect } from "react";
+// import { Button } from "components/button";
+// import { Radio } from "components/checkbox";
+// import { Field, FieldCheckboxes } from "components/field";
+// import ImageUpload from "components/image/ImageUpload";
+// import { Input } from "components/input";
+// import { Label } from "components/label";
+// import { Textarea } from "components/textarea";
+// import { useAuth } from "contexts/auth-context";
+// import { db } from "firebase-app/firebase-config";
+// import { doc, getDoc, updateDoc } from "firebase/firestore";
+// import useFirebaseImage from "hooks/useFirebaseImage";
+// import DashboardHeading from "module/dashboard/DashboardHeading";
+// import React, { useEffect } from "react";
+// import { useForm } from "react-hook-form";
+// import { useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import Swal from "sweetalert2";
-import { userRole, userStatus } from "utils/constants";
+import swal from "sweetalert";
+// import { userRole, userStatus } from "utils/constants";
+import useFirebaseImage from "../../hooks/useFirebaseImage";
+import { useAuth } from "../../contexts/auth-context";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { db } from "../../firebase/firebase-config";
+import { useEffect } from "react";
+import DashboardHeading from "../dashboard/DashboardHeading";
+import ImageUpload from "../../components/image/ImageUpload";
+import Field from "../../components/field/Field";
+import Label from "../../components/lable/Label";
+import Input from "../../components/input/Input";
+import FieldCheckboxes from "../../components/field/FieldCheckboxes";
+import Radio from "../../components/checkbox/Radio";
+import Button from "../../components/button/Button";
+import Textarea from "../../components/textarea/Textarea";
+import { userRole, userStatus } from "../../utils/constants";
 
 const UserUpdate = () => {
   const {
@@ -41,10 +58,10 @@ const UserUpdate = () => {
   const { userInfo } = useAuth();
   const handleUpdateUser = async (values) => {
     if (!isValid) return;
-    if (userInfo?.role !== userRole.ADMIN) {
-      Swal.fire("Failed", "You have no right to do this action", "warning");
-      return;
-    }
+    // if (userInfo?.role !== userRole.ADMIN) {
+    //   swal("Oops!", "Something went wrong!", "error");
+    //   return;
+    // }
     try {
       const colRef = doc(db, "users", userId);
       await updateDoc(colRef, {

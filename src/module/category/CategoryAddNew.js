@@ -1,19 +1,22 @@
-import { Button } from "components/button";
-import { Radio } from "components/checkbox";
-import { Field, FieldCheckboxes } from "components/field";
-import { Input } from "components/input";
-import { Label } from "components/label";
-import { useAuth } from "contexts/auth-context";
-import { db } from "firebase-app/firebase-config";
+import Button from "../../components/button/Button";
+import Field from "../../components/field/Field";
+import Label from "../../components/lable/Label";
+import Input from "../../components/input/Input";
+import Radio from "../../components/checkbox/Radio";
+import { useAuth } from "../../contexts/auth-context";
+import { db } from "../../firebase/firebase-config";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import DashboardHeading from "module/dashboard/DashboardHeading";
+// import DashboardHeading from "module/dashboard/DashboardHeading";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import slugify from "slugify";
-import Swal from "sweetalert2";
-import { categoryStatus, userRole } from "utils/constants";
-
+// import Swal from "sweetalert2";
+// import { categoryStatus, userRole } from "utils/constants";
+import DashboardHeading from "../dashboard/DashboardHeading";
+import FieldCheckboxes from "../../components/field/FieldCheckboxes";
+import { categoryStatus, userRole } from "../../utils/constants";
+import swal from "sweetalert";
 const CategoryAddNew = () => {
   const {
     control,
@@ -34,7 +37,8 @@ const CategoryAddNew = () => {
   const handleAddNewCategory = async (values) => {
     if (!isValid) return;
     if (userInfo?.role !== userRole.ADMIN) {
-      Swal.fire("Failed", "You have no right to do this action", "warning");
+      // swal.fire("Failed", "You have no right to do this action", "warning");
+      swal("Oops!", "Something went wrong!", "error");
       return;
     }
     const newValues = { ...values };
@@ -61,6 +65,7 @@ const CategoryAddNew = () => {
     }
   };
   const watchStatus = watch("status");
+
   return (
     <div>
       <DashboardHeading

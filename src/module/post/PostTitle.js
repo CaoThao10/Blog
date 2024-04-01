@@ -13,6 +13,7 @@ const PostTitleStyles = styled.span`
     display: block;
     text-decoration: none;
     color: #000;
+    list-style: none;
   }
   ${(props) =>
     props.size === "normal" &&

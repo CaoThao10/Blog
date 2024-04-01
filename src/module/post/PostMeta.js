@@ -12,6 +12,8 @@ const PostMetaStyles = styled.div`
   a {
     text-decoration: none;
     color: inherit;
+    text-decoration: none;
+    list-style: none;
   }
   .post {
     &-dot {
@@ -34,19 +36,14 @@ const PostMetaStyles = styled.div`
   }
 `;
 
-const PostMeta = ({
-  date = "23",
-  authorName = "",
-  className = "",
-  to = "",
-}) => {
+const PostMeta = ({ date = "", authorName = "", className = "", to = "" }) => {
   return (
     <PostMetaStyles className={`post-meta ${className}`}>
       <span className="post-time">{date}</span>
       <span className="post-dot"></span>
-      <NavLink to={to}>
+      <Link to={`/author/${to}`}>
         <span className="post-author">{authorName}</span>
-      </NavLink>
+      </Link>
     </PostMetaStyles>
   );
 };

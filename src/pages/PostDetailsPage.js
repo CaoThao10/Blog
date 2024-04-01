@@ -1,17 +1,20 @@
-import styled from "styled-components";
-import React, { useEffect, useState } from "react";
-import PostRelated from "module/post/PostRelated";
-import PostMeta from "module/post/PostMeta";
-import PostImage from "module/post/PostImage";
-import PostCategory from "module/post/PostCategory";
-import PageNotFound from "./PageNotFound";
-import Layout from "components/layout/Layout";
-import AuthorBox from "components/author/AuthorBox";
-import { Link, useParams } from "react-router-dom";
-import { db } from "firebase-app/firebase-config";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { useAuth } from "contexts/auth-context";
-import { userRole } from "utils/constants";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import styled from "styled-components";
+import { db } from "../firebase/firebase-config";
+import NotFoundPage from "./NotFoundPage";
+import { useAuth } from "../contexts/auth-context";
+import Layout from "../components/layout/Layout";
+import PostImage from "../module/post/PostImage";
+import PostCategory from "../module/post/PostCategory";
+import PostMeta from "../module/post/PostMeta";
+import { userRole } from "../utils/constants";
+import PostRelated from "../module/post/PostRelated";
+import AuthorBox from "../components/author/AuthorBox";
+import slugify from "slugify";
+
+// import { userRole } from "utils/constants";
 const PostDetailsPageStyles = styled.div`
   padding-bottom: 100px;
   .post {
@@ -99,7 +102,7 @@ const PostDetailsPageStyles = styled.div`
   }
 `;
 
-const PostDetailsPage = () => {
+const PostDetailsPage = ({ data }) => {
   const { slug } = useParams();
   const [postInfo, setPostInfo] = useState({});
   useEffect(() => {
@@ -122,9 +125,12 @@ const PostDetailsPage = () => {
     document.body.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [slug]);
   const { userInfo } = useAuth();
-  if (!slug) return <PageNotFound></PageNotFound>;
+  if (!slug) return <NotFoundPage></NotFoundPage>;
   if (!postInfo.title) return null;
   const { user } = postInfo;
+  const date = new Date(postInfo?.createdAt?.seconds * 1000);
+  const formatDate = new Date(date).toLocaleDateString("vi-VI");
+
   return (
     <PostDetailsPageStyles>
       <Layout>
@@ -139,7 +145,13 @@ const PostDetailsPage = () => {
                 {postInfo.category?.name}
               </PostCategory>
               <h1 className="post-heading">{postInfo.title}</h1>
-              <PostMeta></PostMeta>
+              {/* <PostMeta>{postInfo.category?.createAt}</PostMeta> */}
+              <PostMeta
+                // to={slugify(user?.fullname || "", { lower: true })}
+                to={slugify(user?.username || "", { lower: true })}
+                authorName={user?.username}
+                date={formatDate || ""}
+              ></PostMeta>
               {/* Check if user role is ADMIN then can edit the post */}
               {userInfo?.role === userRole.ADMIN && (
                 <Link

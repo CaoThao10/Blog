@@ -1,21 +1,38 @@
-import { Button } from "components/button";
-import { Radio } from "components/checkbox";
-import { Field, FieldCheckboxes } from "components/field";
-import ImageUpload from "components/image/ImageUpload";
-import { Input } from "components/input";
-import { Label } from "components/label";
-import DashboardHeading from "module/dashboard/DashboardHeading";
-import React from "react";
+// import { Button } from "components/button";
+// import { Radio } from "components/checkbox";
+// import { Field, FieldCheckboxes } from "components/field";
+// import ImageUpload from "components/image/ImageUpload";
+// import { Input } from "components/input";
+// import { Label } from "components/label";
+// import DashboardHeading from "module/dashboard/DashboardHeading";
+// import React from "react";
+// import { useForm } from "react-hook-form";
+// import { userRole, userStatus } from "utils/constants";
+// import useFirebaseImage from "hooks/useFirebaseImage";
+// import { createUserWithEmailAndPassword } from "firebase/auth";
+// import { auth, db } from "firebase-app/firebase-config";
+// import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+// import slugify from "slugify";
+// import { toast } from "react-toastify";
+// import { useAuth } from "contexts/auth-context";
 import { useForm } from "react-hook-form";
-import { userRole, userStatus } from "utils/constants";
-import useFirebaseImage from "hooks/useFirebaseImage";
+import swal from "sweetalert";
+import { userRole, userStatus } from "../../utils/constants";
+import useFirebaseImage from "../../hooks/useFirebaseImage";
+import { useAuth } from "../../contexts/auth-context";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "firebase-app/firebase-config";
+import { auth, db } from "../../firebase/firebase-config";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import slugify from "slugify";
 import { toast } from "react-toastify";
-import { useAuth } from "contexts/auth-context";
-import Swal from "sweetalert2";
+import DashboardHeading from "../dashboard/DashboardHeading";
+import ImageUpload from "../../components/image/ImageUpload";
+import Field from "../../components/field/Field";
+import Label from "../../components/lable/Label";
+import Input from "../../components/input/Input";
+import FieldCheckboxes from "../../components/field/FieldCheckboxes";
+import Radio from "../../components/checkbox/Radio";
+import Button from "../../components/button/Button";
 
 const UserAddNew = () => {
   const {
@@ -50,7 +67,8 @@ const UserAddNew = () => {
   const handleCreateUser = async (values) => {
     if (!isValid) return;
     if (userInfo?.role !== userRole.ADMIN) {
-      Swal.fire("Failed", "You have no right to do this action", "warning");
+      swal.fire("Failed", "You have no right to do this action", "warning");
+      swal("Oops!", "Something went wrong!", "error");
       return;
     }
     try {

@@ -10,6 +10,16 @@ import DashboardPage from "./pages/DashboardPage";
 import DashboardLayout from "./module/dashboard/DashboardLayout";
 import PostManage from "./module/post/PostManage";
 import PostAddNew from "./module/post/PosAddNew";
+import CategoryAddNew from "./module/category/CategoryAddNew";
+import CategoryManage from "./module/category/CategoryManage";
+import CategoryUpdate from "./module/category/CategoryUpdate";
+import UserAddNew from "./module/user/UserAddNew";
+import UserUpdate from "./module/user/UserUpdate";
+import UserManage from "./module/user/UserManage";
+import UserProfile from "./module/user/UserProfile";
+import PostUpdate from "./module/post/PostUpdate";
+import PostDetailsPage from "./pages/PostDetailsPage";
+import CategoryPage from "./pages/CategoryPage";
 
 function App() {
   return (
@@ -32,6 +42,46 @@ function App() {
             <Route
               path="/manage/add-post"
               element={<PostAddNew></PostAddNew>}
+            ></Route>
+            <Route
+              path="/manage/add-category"
+              element={<CategoryAddNew></CategoryAddNew>}
+            ></Route>
+            <Route
+              path="/manage/category"
+              element={<CategoryManage></CategoryManage>}
+            ></Route>
+            <Route
+              path="/manage/update-category"
+              element={<CategoryUpdate></CategoryUpdate>}
+            ></Route>
+            <Route
+              path="/manage/user"
+              element={<UserManage></UserManage>}
+            ></Route>
+            <Route
+              path="/manage/add-user"
+              element={<UserAddNew></UserAddNew>}
+            ></Route>
+            <Route
+              path="/manage/update-user"
+              element={<UserUpdate></UserUpdate>}
+            ></Route>
+            <Route
+              path="/profile"
+              element={<UserProfile></UserProfile>}
+            ></Route>
+            <Route
+              path="/manage/update-post"
+              element={<PostUpdate></PostUpdate>}
+            ></Route>
+            <Route
+              path="/:slug"
+              element={<PostDetailsPage></PostDetailsPage>}
+            ></Route>
+            <Route
+              path="/category/:slug"
+              element={<CategoryPage></CategoryPage>}
             ></Route>
           </Route>
         </Routes>

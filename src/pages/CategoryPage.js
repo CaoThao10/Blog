@@ -1,10 +1,10 @@
-import Heading from "components/layout/Heading";
-import Layout from "components/layout/Layout";
-import { db } from "firebase-app/firebase-config";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-import PostItem from "module/post/PostItem";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { db } from "../firebase/firebase-config";
+import Layout from "../components/layout/Layout";
+import Heading from "../components/layout/Heading";
+import PostItem from "../module/post/PostItem";
 
 const CategoryPage = () => {
   const [posts, setPosts] = useState([]);

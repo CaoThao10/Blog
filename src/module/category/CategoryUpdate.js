@@ -1,19 +1,32 @@
-import { Button } from "components/button";
-import { Radio } from "components/checkbox";
-import { Field } from "components/field";
-import { Input } from "components/input";
-import { Label } from "components/label";
-import { useAuth } from "contexts/auth-context";
-import { db } from "firebase-app/firebase-config";
+// import { Button } from "components/button";
+// import { Radio } from "components/checkbox";
+// import { Field } from "components/field";
+// import { Input } from "components/input";
+// import { Label } from "components/label";
+// import { useAuth } from "contexts/auth-context";
+// import { db } from "firebase-app/firebase-config";
+// import { doc, getDoc, updateDoc } from "firebase/firestore";
+// import DashboardHeading from "module/dashboard/DashboardHeading";
+// import React, { useEffect } from "react";
+// import { useForm } from "react-hook-form";
+// import { useNavigate, useSearchParams } from "react-router-dom";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import DashboardHeading from "module/dashboard/DashboardHeading";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import slugify from "slugify";
-import Swal from "sweetalert2";
-import { categoryStatus, userRole } from "utils/constants";
+import swal from "sweetalert";
+import { db } from "../../firebase/firebase-config";
+import { useAuth } from "../../contexts/auth-context";
+import { categoryStatus, userRole } from "../../utils/constants";
+import DashboardHeading from "../dashboard/DashboardHeading";
+import Field from "../../components/field/Field";
+import Label from "../../components/lable/Label";
+import Input from "../../components/input/Input";
+import Radio from "../../components/checkbox/Radio";
+import Button from "../../components/button/Button";
+// import { categoryStatus, userRole } from "utils/constants";
 
 const CategoryUpdate = () => {
   const {
@@ -41,10 +54,10 @@ const CategoryUpdate = () => {
   const { userInfo } = useAuth();
 
   const handleUpdateCategory = async (values) => {
-    if (userInfo?.role !== userRole.ADMIN) {
-      Swal.fire("Failed", "You have no right to do this action", "warning");
-      return;
-    }
+    // if (userInfo?.role !== userRole.ADMIN) {
+    //   swal.fire("Failed", "You have no right to do this action", "warning");
+    //   return;
+    // }
     const colRef = doc(db, "categories", categoryId);
     await updateDoc(colRef, {
       name: values.name,

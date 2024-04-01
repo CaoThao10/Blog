@@ -4,6 +4,7 @@ import PostCategory from "./PostCategory";
 import PostTitle from "./PostTitle";
 import PostMeta from "./PostMeta";
 import PostImage from "./PostImage";
+import slugify from "slugify";
 //
 const PostNewestItemStyles = styled.div`
   display: flex;
@@ -49,19 +50,25 @@ const PostNewestItemStyles = styled.div`
     }
   }
 `;
-const PostNewestItem = () => {
+const PostNewestItem = ({ data }) => {
+  if (!data.id) return null;
+  const date = new Date(data?.createdAt?.seconds * 1000);
+  const formatDate = new Date(date).toLocaleDateString("vi-VI");
   return (
     <PostNewestItemStyles>
       {/* <PostImage url={data.image} alt="" to={data?.slug}></PostImage> */}
       {/* <img className="post-image" src="/img1.jpeg" alt="" /> */}
-      <PostImage url="/img1.jpeg"></PostImage>
+      <PostImage url={data.image} alt="" to="/"></PostImage>
       <div className="post-overlay"></div>
       <div className="post-content">
-        <PostCategory type="secondary">kiến thức</PostCategory>
-        <PostTitle>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-        </PostTitle>
-        <PostMeta></PostMeta>
+        <PostCategory>{data.category?.name}</PostCategory>
+        <PostTitle to={data?.slug}>{data?.title}</PostTitle>
+        {/* <PostMeta></PostMeta> */}
+        <PostMeta
+          to={slugify(data?.user?.username || "", { lower: true })}
+          authorName={data?.user?.fullname}
+          date={formatDate}
+        ></PostMeta>
       </div>
     </PostNewestItemStyles>
   );
