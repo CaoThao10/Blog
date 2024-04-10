@@ -32,7 +32,7 @@ import { categoryStatus, userRole } from "../../utils/constants";
 import DashboardHeading from "../dashboard/DashboardHeading";
 import { useAuth } from "../../contexts/auth-context";
 
-const CATEGORY_PER_PAGE = 1;
+const CATEGORY_PER_PAGE = 3;
 
 const CategoryManage = () => {
   const [categoryList, setCategoryList] = useState([]);

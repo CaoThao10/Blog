@@ -27,7 +27,7 @@ import { useAuth } from "../../contexts/auth-context";
 import { toast } from "react-toastify";
 import { Dropdown } from "../../components/dropdown";
 import { postStatus } from "../../utils/constants";
-
+import ReactQuill from "react-quill";
 const PostAddNew = () => {
   // const { userInfo } = useAuth();
   // const { control, watch, setValue, handleSubmit, getValues, reset } = useForm({
@@ -173,6 +173,7 @@ const PostAddNew = () => {
   const [categories, setCategories] = useState([]);
   const [selectCategory, setSelectCategory] = useState("");
   const [loading, setLoading] = useState(false);
+  const [content, setContent] = useState("");
   useEffect(() => {
     async function fetchUserData() {
       if (!userInfo.email) return;
@@ -205,6 +206,7 @@ const PostAddNew = () => {
       await addDoc(colRef, {
         ...cloneValues,
         image,
+        content,
         createdAt: serverTimestamp(),
       });
       toast.success("Create new post successfully!");
@@ -300,6 +302,14 @@ const PostAddNew = () => {
               name="author"
               // onChange={() => {}}
             ></Input>
+          </Field>
+        </div>
+        <div className="grid  gap-x-10 mb-10">
+          <Field>
+            <Label>Content</Label>
+            <div className="w-full entry-content">
+              <ReactQuill theme="snow" value={content} onChange={setContent} />
+            </div>
           </Field>
         </div>
         <div className="grid grid-cols-2 gap-x-10 mb-10">

@@ -56,7 +56,7 @@ const AuthenticationPage = ({ children }) => {
         <NavLink to="/">
           <img src="/logo2.png" alt="" className="logo" />
         </NavLink>
-        <h2 className="heading">Citrus Blush Blogs</h2>
+        <h2 className="heading text-2xl font-bold">Citrus Blush Blogs</h2>
         {children}
       </div>
     </AuthenticationPageStyles>

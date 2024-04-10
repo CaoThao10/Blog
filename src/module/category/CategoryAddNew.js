@@ -36,11 +36,11 @@ const CategoryAddNew = () => {
   const { userInfo } = useAuth();
   const handleAddNewCategory = async (values) => {
     if (!isValid) return;
-    if (userInfo?.role !== userRole.ADMIN) {
-      // swal.fire("Failed", "You have no right to do this action", "warning");
-      swal("Oops!", "Something went wrong!", "error");
-      return;
-    }
+    // if (userInfo?.role !== userRole.ADMIN) {
+    // swal.fire("Failed", "You have no right to do this action", "warning");
+    // swal("Oops!", "Something went wrong!", "error");
+    // return;
+    // }
     const newValues = { ...values };
     newValues.slug = slugify(newValues.name || newValues.slug, {
       lower: true,

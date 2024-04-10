@@ -66,11 +66,11 @@ const UserAddNew = () => {
   const { userInfo } = useAuth();
   const handleCreateUser = async (values) => {
     if (!isValid) return;
-    if (userInfo?.role !== userRole.ADMIN) {
-      swal.fire("Failed", "You have no right to do this action", "warning");
-      swal("Oops!", "Something went wrong!", "error");
-      return;
-    }
+    // if (userInfo?.role !== userRole.ADMIN) {
+    //   swal.fire("Failed", "You have no right to do this action", "warning");
+    //   swal("Oops!", "Something went wrong!", "error");
+    //   return;
+    // }
     try {
       await createUserWithEmailAndPassword(auth, values.email, values.password);
       await addDoc(collection(db, "users"), {

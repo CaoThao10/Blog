@@ -20,6 +20,8 @@ import UserProfile from "./module/user/UserProfile";
 import PostUpdate from "./module/post/PostUpdate";
 import PostDetailsPage from "./pages/PostDetailsPage";
 import CategoryPage from "./pages/CategoryPage";
+import BlogPage from "./pages/BlogPage";
+import ContactPage from "./pages/ContactPage";
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/" element={<HomePage></HomePage>} />
+          <Route path="/blog" element={<BlogPage></BlogPage>} />
+          <Route path="/contact" element={<ContactPage></ContactPage>} />
           <Route path="/sign-up" element={<SignUpPage></SignUpPage>} />
           <Route path="/sign-in" element={<SignInPage></SignInPage>} />
           <Route path="*" element={<NotFoundPage></NotFoundPage>} />
@@ -75,15 +79,16 @@ function App() {
               path="/manage/update-post"
               element={<PostUpdate></PostUpdate>}
             ></Route>
-            <Route
-              path="/:slug"
-              element={<PostDetailsPage></PostDetailsPage>}
-            ></Route>
+
             <Route
               path="/category/:slug"
               element={<CategoryPage></CategoryPage>}
             ></Route>
           </Route>
+          <Route
+            path="/:slug"
+            element={<PostDetailsPage></PostDetailsPage>}
+          ></Route>
         </Routes>
       </AuthProvider>
     </Router>

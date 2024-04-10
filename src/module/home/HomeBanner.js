@@ -45,10 +45,10 @@ const HomeBanner = () => {
       <div className="item-left">
         <h3 className="text-banner">Citrus Blush Blogs</h3>
         <h4 className="titte-banner">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis
-          laboriosam eos architecto culpa quos consequatur nostrum perferendis
-          voluptatum, quae maiores et possimus fugit ut, in est nisi ad ipsam
-          quo.
+          Hello, welcome to my website. Here you can find articles about the
+          latest technology, read and share it with friends and colleagues. Or
+          maybe you have new information you want to share with everyone. Come
+          to Citrus Blush Blogs
         </h4>
         <Button to="/sign-up">Get started</Button>
       </div>

@@ -15,7 +15,9 @@ import {
 import { useEffect, useState } from "react";
 import { db } from "../../firebase/firebase-config";
 
-const HomeFeatureStyles = styled.div``;
+const HomeFeatureStyles = styled.div`
+  margin: 0 20px;
+`;
 
 const HomeFeature = () => {
   const [posts, setPosts] = useState([]);
@@ -25,7 +27,7 @@ const HomeFeature = () => {
       colRef,
       where("status", "==", 1),
       where("hot", "==", true),
-      limit(3)
+      limit(6)
     );
     onSnapshot(queries, (snapshot) => {
       // console.log(snapshot);
@@ -44,7 +46,7 @@ const HomeFeature = () => {
   // console.log(posts);
   return (
     <HomeFeatureStyles>
-      <div className="container">
+      <div className="container ">
         <Heading>Bài viết nổi bật</Heading>
         <div className="grid-layout">
           {/* <PostFeatureItem></PostFeatureItem> */}

@@ -1,19 +1,16 @@
 import React from "react";
-import styled from "styled-components";
-import PostCategory from "./PostCategory";
 import PostTitle from "./PostTitle";
 import PostMeta from "./PostMeta";
+import PostCategory from "./PostCategory";
 import PostImage from "./PostImage";
+import styled from "styled-components";
 import slugify from "slugify";
-import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../firebase/firebase-config";
-
-const PostFeatureItemStyles = styled.div`
+const PostAllItemStyles = styled.div`
   width: 100%;
   border-radius: 16px;
   position: relative;
   height: 169px;
+  overflow: hidden;
   .post {
     &-image {
       width: 100%;
@@ -105,15 +102,14 @@ const PostFeatureItemStyles = styled.div`
     }
   }
 `;
-
-const PostFeatureItem = ({ data }) => {
+const PostAllItem = ({ data }) => {
   if (!data || !data.id) return null;
   console.log(data);
   const date = new Date(data?.createdAt?.seconds * 1000);
   const formatDate = new Date(date).toLocaleDateString("vi-VI");
   const { category, user } = data;
   return (
-    <PostFeatureItemStyles>
+    <PostAllItemStyles>
       <PostImage url={data.image} alt="unsplash"></PostImage>
       <div className="post-overlay"></div>
       <div className="post-content">
@@ -132,8 +128,8 @@ const PostFeatureItem = ({ data }) => {
           {data.title}
         </PostTitle>
       </div>
-    </PostFeatureItemStyles>
+    </PostAllItemStyles>
   );
 };
 
-export default PostFeatureItem;
+export default PostAllItem;
